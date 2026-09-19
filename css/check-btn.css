@@ -1,0 +1,25 @@
+/* Feuille des styles s'appliquant au bouton "Vérifier" placé à côté du bouton "Poster" sur https://www.jeuxvideo.com */
+
+.shape-check-btn {
+	all				 : unset			  ; /* On réinitialise les styles par défaut des boutons JVC */
+
+	height			 : 32px				  ; /* Dimensions pour le carré */
+	width			 : 110.76px			  ;
+
+	font-weight		 : bold				  ;
+	font-size		 : 16px				  ;
+	background-color : #800000 !important ;
+	color			 : #b6b6b6 !important ;
+
+	display			 : inline-flex		  ; /* Centre horizontalement et verticalement le texte */
+	align-items		 : center			  ;
+	justify-content	 : center			  ;
+
+	border-radius	 : 24px				  ; /* Carré avec bords très arrondis */
+	margin-left		 : 8px				  ;
+}
+
+.shape-check-btn:hover {
+	background-color : #ff0000 !important ;
+	color			 : #ffffff !important ;
+}
