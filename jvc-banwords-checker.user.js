@@ -11,6 +11,17 @@
 // @downloadURL  https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banwords-checker.user.js
 // ==/UserScript==
 
+
+
+// Tampermonkey va réagir au moment de vouloir accéder à 
+// https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banwords-checker.user.js
+// car il y a le bloc de métadonnées (le truc qui commence par // ==UserScript==).
+// Tampermonkey intercepte alors ce type de ressource et reconnaît :
+// « C'est un fichier .user.js contenant des métadonnées UserScript => je peux proposer son installation. »
+// Pour les mises à jour auto, @updateURL doit pointer vers le fichier .user.js complet, pas vers les listes banwords.js etc.
+
+
+
 /**
  * ================ FONCTIONS UTILITAIRES ================
  */
