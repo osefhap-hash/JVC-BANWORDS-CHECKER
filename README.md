@@ -1,2 +1,3 @@
-# jvc-banwords-checker
-Détection des termes automatiquement censurés sur JVC.
+# JVC-BANWORDS-CHECKER
+
+Script de détection des termes provoquant une suppression automatique d'un message sur JVC.
