@@ -1,4 +1,3 @@
-// Test Git
 /**
  * ================ DEFINITION DES DICTIONNAIRES DES MOTS ET GROUPES DE MOTS INTERDITS ================
  */
