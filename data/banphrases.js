@@ -1,4 +1,7 @@
 const banphrases_dictionary = {
+	"D" : new Set([
+		"drag queen",
+	]),
 	"G" : new Set([
 		"grand remplacement",
 	]),
