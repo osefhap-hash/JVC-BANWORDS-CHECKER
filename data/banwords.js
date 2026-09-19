@@ -1,5 +1,5 @@
 /**
- * ================ DEFINITION DES DICTIONNAIRES DES MOTS ET GROUPES DE MOTS INTERDITS ================
+ * ================ DÉFINITION DES DICTIONNAIRES DES MOTS ET GROUPES DE MOTS INTERDITS ================
  */
 
 const basic_banwords_dictionary = {
