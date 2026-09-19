@@ -26,7 +26,7 @@
 
 
 
-// Tampermonkey va réagir au moment de vouloir accéder à 
+// Tampermonkey va réagir au moment de vouloir accéder à :
 // https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banwords-checker.user.js
 // car il y a le bloc de métadonnées (le truc qui commence par // ==UserScript==).
 // Tampermonkey intercepte alors ce type de ressource et reconnaît :
