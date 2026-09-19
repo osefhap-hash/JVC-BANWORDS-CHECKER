@@ -213,4 +213,4 @@ for (const dictionary of [basic_banwords_dictionary, new_banwords_dictionary]) {
 			// L'avantage est que Set élimine automatiquement les doublons.
 			// Donc si un mot était présent dans les deux dictionnaires, il ne serait présent qu'une seule fois dans le Set.
     }
-}
+} // TEST BRANCHE_TEST
