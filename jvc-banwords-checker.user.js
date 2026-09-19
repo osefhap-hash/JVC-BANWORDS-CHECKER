@@ -1,11 +1,14 @@
 // ==UserScript==
 // @name         JVC Banwords Checker
+// @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
 // @version      19-Septembre-2026
 // @match        https://www.jeuxvideo.com/forums/*
 // @author       captain_cid31
 // @description  --- Script pour détecter les mots ou groupes de mots interdits ---
 // @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/data/banwords.js
 // @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/data/banphrases.js
+// @updateURL    https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banword-checker.user.js
+// @downloadURL  https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banword-checker.user.js
 // ==/UserScript==
 
 /**
