@@ -56,15 +56,6 @@ GM_addStyle(GM_getResourceText("check-btn-css")) ;
  */
 
 function insert_check_button() {
-	// Pas d'insertion dans jvchat :
-    const text_zone = document.querySelector("#message_reponse") ;
-    // Attention ! Plusieurs textarea dans jvchat contrairement à jvc, donc document.querySelector("textarea") ne retournera pas toujours le bon !
-    if (text_zone && text_zone.placeholder === "Hop hop hop, le message ne va pas s'écrire tout seul !") {
-        const chck_btn = document.querySelector(".shape-check-btn") ;
-        if (chck_btn) chck_btn.remove() ;
-        return ;
-    }
-
 	// div qui contient la balise du bouton Poster.
 	const post_button_block = document.querySelector(".messageEditForm__buttons") ;
 
