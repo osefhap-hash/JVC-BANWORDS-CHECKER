@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.0
+// @version      1.0.4
 // Created		 :	Saturday, 19th September 2026
 // Last modified :	Sunday, 20th September 2026
 // @match        https://www.jeuxvideo.com/forums/*
@@ -56,6 +56,18 @@ GM_addStyle(GM_getResourceText("check-btn-css")) ;
  */
 
 function insert_check_button() {
+	// Insertion spéciale dans jvchat :
+	const text_area = document.querySelector("#message_reponse") ;
+	// Attention ! Plusieurs textarea dans jvchat contrairement à jvc, donc document.querySelector("textarea") ne retournera pas toujours le bon !
+	if (text_area && text_area.placeholder === "Hop hop hop, le message ne va pas s'écrire tout seul !") {
+		const chck_btn = document.querySelector(".shape-check-btn") ;
+		if (chck_btn && chck_btn.classList.contains("shape-check-btn")) {
+			chck_btn.classList.remove("shape-check-btn") ;
+			chck_btn.classList.add("shape-check-btn-jvchat") ;
+		}
+		return ;
+	}
+
 	// div qui contient la balise du bouton Poster.
 	const post_button_block = document.querySelector(".messageEditForm__buttons") ;
 
