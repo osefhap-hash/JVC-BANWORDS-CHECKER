@@ -183,6 +183,10 @@ const new_banwords_dictionary = {
 	"Q" : new Set([
 		"queue",
 	]),
+	"R" : new Set([
+		"racisme",
+		"raciste",
+	]),
 	"S" : new Set([
 		"salaud",
 		"salopard",
