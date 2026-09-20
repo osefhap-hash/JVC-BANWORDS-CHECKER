@@ -130,7 +130,7 @@ for (const set_of_phrases of Object.values(banphrases_dictionary)) {
 function check_message(/*src*/) {
 	/*const clicked_btn = src.currentTarget ;*/
 	// Pas besoin de remonter jusqu'à la zone de saisie du texte depuis le button cliqué, on peut le cibler directement :
-	const textarea = document.querySelector("textarea") ; // Rappel nécessaire à chaque clic, car le texte peut avoir changé entre temps.
+	const textarea = document.querySelector("#message_reponse") ; // Rappel nécessaire à chaque clic, car le texte peut avoir changé entre temps.
 	if (!textarea) return ;
 	const message = textarea.value ; // plutôt que textContent
 	const tokenized_msg = tokenize_with_positions(message) ;
