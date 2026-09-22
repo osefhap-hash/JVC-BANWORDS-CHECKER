@@ -87,24 +87,38 @@ function show_check_preview(message, detections) {
 	preview_style.textContent = GM_getResourceText("check-preview-css") ; // <style>...</style>
 	check_window_doc.head.appendChild(preview_style) ; // <head> <style>...</style> </head>
 
-	const check_window_title = check_window_doc.createElement("h1") ;
-	check_window_title.textContent = "Analyse du message" ;
 
-	const message_container = check_window_doc.createElement("div") ;
-	message_container.classList.add("message") ;
-	message_container.innerHTML = build_highlighted_message(message, detections) ;
 
-	const warning_container = check_window_doc.createElement("div") ;
-	warning_container.classList.add("warning") ;
-	warning_container.textContent = warning ;
+	/* ======== Conteneur des deux zones de message côte à côte ======== */
+	const boxes_container = check_window_doc.createElement("div") ;
+	boxes_container.classList.add("boxes-container") ;
 
-	check_window_doc.body.appendChild(check_window_title) ;
-	check_window_doc.body.appendChild(message_container) ;
-	check_window_doc.body.appendChild(warning_container) ;
+	// Zone "Analyse du message"
+	const analysis_column = check_window_doc.createElement("div") ;
+	analysis_column.classList.add("message-column") ;
 
-	// Visualisation de la modification du message
+	const analysis_title = check_window_doc.createElement("h1") ;
+	analysis_title.textContent = "Analyse du message" ;
+
+	const analysis_warning_container = check_window_doc.createElement("div") ;
+	analysis_warning_container.classList.add("warning") ;
+	analysis_warning_container.textContent = warning ;
+
+	const analysis_message_container = check_window_doc.createElement("div") ;
+	analysis_message_container.classList.add("message") ;
+	analysis_message_container.innerHTML = build_highlighted_message(message, detections) ;
+
+	analysis_column.appendChild(analysis_title) ;
+	analysis_column.appendChild(analysis_warning_container) ;
+	analysis_column.appendChild(analysis_message_container) ;
+	boxes_container.appendChild(analysis_column) ;
+
+	// Zone "Visualisation de la modification du message"
 	// (seulement s'il y a des mots problématiques dans le message, sinon ça n'a pas de sens) :
 	if (detections.length > 0) {
+		const suggestion_column = check_window_doc.createElement("div") ;
+		suggestion_column.classList.add("message-column") ;
+
 		const suggestion_title = check_window_doc.createElement("h1") ;
 		suggestion_title.textContent = "Suggestion de contournement de la censure" ;
 
@@ -112,7 +126,9 @@ function show_check_preview(message, detections) {
 		modified_message_container.classList.add("message") ;
 		modified_message_container.textContent = build_modified_message(message, detections) ;
 
-		check_window_doc.body.appendChild(suggestion_title) ;
-		check_window_doc.body.appendChild(modified_message_container) ;
+		suggestion_column.appendChild(suggestion_title) ;
+		suggestion_column.appendChild(modified_message_container) ;
+		boxes_container.appendChild(suggestion_column) ;
 	}
+	check_window_doc.body.appendChild(boxes_container) ;
 }
