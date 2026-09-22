@@ -54,6 +54,17 @@ function build_modified_message(message, detections) {
 }
 
 
+async function set_text_in_clipboard(current_window, text, copy_btn) {
+	try {
+		await current_window.navigator.clipboard.writeText(text) ;
+		copy_btn.textContent = "Copié !" ;
+		setTimeout(() => { copy_btn.textContent = "Copier" ; }, 1500) ;
+	} catch (error) {
+		console.error("Impossible de copier le texte :", error) ;
+	}
+}
+
+
 // La fonction suivante - qui crée la fenêtre de prévisualisation - utilise les styles définis dans le fichier "css/check-preview.css"
 // pour l'élaboration de la fenêtre de prévisualisation.
 // La feuille de style est invoquée dans le fichier de script principal (le fichier .user.js) via la métadonnée Userscript suivante :
@@ -70,16 +81,14 @@ function show_check_preview(message, detections) {
 	if (!check_window) return ;
 
 	const check_window_doc = check_window.document ;
-
 	const unique_detections = new Set(detections.map(detection => detection.text)) ;
-
 	let warning = "" ;
+
 	if (detections.length === 0) warning = "✓ Aucun élément interdit détecté." ;
 	else {
 		const count = unique_detections.size ;
 		warning = `⚠ ${count} élément${count > 1 ? "s distincts" : ""} interdit${count > 1 ? "s" : ""} détecté${count > 1 ? "s" : ""}.` ;
 	}
-
 	check_window_doc.title = "Analyse du message" ; // <title>Analyse du message</title>
 
 	// Définition du style de la fenêtre de prévisualisation
@@ -124,9 +133,21 @@ function show_check_preview(message, detections) {
 
 		const modified_message_container = check_window_doc.createElement("div") ;
 		modified_message_container.classList.add("message") ;
-		modified_message_container.textContent = build_modified_message(message, detections) ;
+		const modified_message = build_modified_message(message, detections) ;
+		modified_message_container.textContent = modified_message ;
+
+		const copy_button = check_window_doc.createElement("button") ;
+		copy_button.classList.add("copy-button") ;
+		copy_button.textContent = "Copier" ;
+		copy_button.type = "button" ;
+		copy_button.addEventListener("click", () => set_text_in_clipboard(
+			check_window,
+			modified_message,
+			copy_button
+		)) ;
 
 		suggestion_column.appendChild(suggestion_title) ;
+		suggestion_column.appendChild(copy_button) ;
 		suggestion_column.appendChild(modified_message_container) ;
 		boxes_container.appendChild(suggestion_column) ;
 	}
