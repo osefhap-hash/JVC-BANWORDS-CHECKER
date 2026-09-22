@@ -30,6 +30,30 @@ function build_highlighted_message(message, detections) {
 }
 
 
+function build_modified_message(message, detections) {
+	let modified_message = "" ;
+	let current_position = 0 ;
+
+	for (const detection of detections) {
+		modified_message += message.slice(current_position, detection.start) ; // Texte normal avant la détection
+		const forbidden_text = message.slice(detection.start, detection.end) ; // Texte de la détection
+
+		// Deuxième lettre du mot problématique détecté => en italique JVC
+		if (forbidden_text.length >= 2) {
+			modified_message += forbidden_text[0] ;
+			modified_message += "''" ;
+			modified_message += forbidden_text[1] ;
+			modified_message += "''" ;
+			modified_message += forbidden_text.slice(2) ;
+		}
+		else modified_message += forbidden_text ;
+		current_position = detection.end ;
+	}
+	modified_message += message.slice(current_position) ; // Texte restant
+	return modified_message ;
+}
+
+
 // La fonction suivante - qui crée la fenêtre de prévisualisation - utilise les styles définis dans le fichier "css/check-preview.css"
 // pour l'élaboration de la fenêtre de prévisualisation.
 // La feuille de style est invoquée dans le fichier de script principal (le fichier .user.js) via la métadonnée Userscript suivante :
@@ -74,7 +98,17 @@ function show_check_preview(message, detections) {
 	warning_container.classList.add("warning") ;
 	warning_container.textContent = warning ;
 
+	// Visualisation de la modification :
+	const suggestion_title = check_window_doc.createElement("h1") ;
+	suggestion_title.textContent = "Suggestion de contournement de la censure" ;
+
+	const modified_message_container = check_window_doc.createElement("div") ;
+	modified_message_container.classList.add("message") ;
+	modified_message_container.textContent = build_modified_message(message, detections) ;
+
 	check_window_doc.body.appendChild(check_window_title) ;
 	check_window_doc.body.appendChild(message_container) ;
 	check_window_doc.body.appendChild(warning_container) ;
+	check_window_doc.body.appendChild(suggestion_title) ;
+	check_window_doc.body.appendChild(modified_message_container) ;
 }
