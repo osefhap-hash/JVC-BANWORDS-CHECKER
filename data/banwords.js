@@ -152,6 +152,7 @@ const new_banwords_dictionary = {
 	]),
 	"F" : new Set([
 		"fellation",
+		"femboy",
 	]),
 	"G" : new Set([
 		"garce",
