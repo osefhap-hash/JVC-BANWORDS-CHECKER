@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.4
+// @version      1.0.5
 // Created		 :	Saturday, 19th September 2026
 // Last modified :	Sunday, 20th September 2026
 // @match        https://www.jeuxvideo.com/forums/*
@@ -19,6 +19,7 @@
 // @updateURL    https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banwords-checker.user.js
 // @downloadURL  https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banwords-checker.user.js
 //
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=jeuxvideo.com
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @run-at       document-idle
