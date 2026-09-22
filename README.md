@@ -8,7 +8,7 @@ Script de détection des termes provoquant une suppression automatique d'un mess
 
 Contient les fichiers de style utilisés pour :
 * définir celui du bouton Vérifier (fichier check-btn.css), varie selon si JVChat est actif ou non,
-* définir celui de la fenêtre "Analyse du message" (fichier check-preview.css)
+* définir celui de la fenêtre "Analyse du message / Suggestion de contournement de la censure" (fichier check-preview.css)
 
 ### Répertoire data :
 
@@ -22,7 +22,7 @@ ATTENTION ! Les mots et groupes de mots dans les deux fichiers sont écrits (ET 
 
 Contient les fichiers dans lesquels sont définies des fonctions utilitaires :
 * token-process-functions.js : contient deux fonctions (canonical_form et tokenize_with_positions), traitant des chaînes de caractères, utilisées pour constituer la prévisualisation du message et la recherche de mots interdits en les comparant avec ceux dans la liste de référence.
-* preview-window-functions.js : contient quatre fonctions (escape_html, build_highlighted_message, build_modified_message et show_check_preview), consacrées exclusivement à la confection de la fenêtre offrant la possibilité de prévisualiser le message pour mettre en évidence les mots problématiques, ainsi que de suggérer une modification du message permettant de contourner la censure absurde de jvc.
+* preview-window-functions.js : contient cinq fonctions (escape_html, build_highlighted_message, build_modified_message, set_text_in_clipboard et show_check_preview), consacrées exclusivement à la confection de la fenêtre offrant la possibilité de prévisualiser le message pour mettre en évidence les mots problématiques, ainsi que de suggérer une modification du message permettant de contourner la censure absurde de jvc.
 
 ### LE FICHIER PRINCIPAL (le script) : jvc-banwords-checker.user.js
 
