@@ -98,17 +98,21 @@ function show_check_preview(message, detections) {
 	warning_container.classList.add("warning") ;
 	warning_container.textContent = warning ;
 
-	// Visualisation de la modification :
-	const suggestion_title = check_window_doc.createElement("h1") ;
-	suggestion_title.textContent = "Suggestion de contournement de la censure" ;
-
-	const modified_message_container = check_window_doc.createElement("div") ;
-	modified_message_container.classList.add("message") ;
-	modified_message_container.textContent = build_modified_message(message, detections) ;
-
 	check_window_doc.body.appendChild(check_window_title) ;
 	check_window_doc.body.appendChild(message_container) ;
 	check_window_doc.body.appendChild(warning_container) ;
-	check_window_doc.body.appendChild(suggestion_title) ;
-	check_window_doc.body.appendChild(modified_message_container) ;
+
+	// Visualisation de la modification du message
+	// (seulement s'il y a des mots problématiques dans le message, sinon ça n'a pas de sens) :
+	if (detections.length > 0) {
+		const suggestion_title = check_window_doc.createElement("h1") ;
+		suggestion_title.textContent = "Suggestion de contournement de la censure" ;
+
+		const modified_message_container = check_window_doc.createElement("div") ;
+		modified_message_container.classList.add("message") ;
+		modified_message_container.textContent = build_modified_message(message, detections) ;
+
+		check_window_doc.body.appendChild(suggestion_title) ;
+		check_window_doc.body.appendChild(modified_message_container) ;
+	}
 }
