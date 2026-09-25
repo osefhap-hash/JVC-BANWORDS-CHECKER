@@ -114,6 +114,7 @@ const basic_banwords_dictionary = {
 
 const new_banwords_dictionary = {
 	"A" : new Set([
+		"anal",
 		"anus",
 	]),
 	"B" : new Set([
@@ -158,6 +159,7 @@ const new_banwords_dictionary = {
 		"garce",
 		"gay", /* au singulier */
 		"gouine",
+		"grognasse",
 	]),
 	"H" : new Set([
 		"harem",
@@ -169,6 +171,7 @@ const new_banwords_dictionary = {
 		"levrette",
 	]),
 	"M" : new Set([
+		"marijuana",
 		"milf",
 	]),
 	"O" : new Set([
