@@ -173,6 +173,7 @@ const new_banwords_dictionary = {
 	"M" : new Set([
 		"marijuana",
 		"milf",
+		"mongol",
 	]),
 	"O" : new Set([
 		"onlyfans",
