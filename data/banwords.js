@@ -52,9 +52,12 @@ const basic_banwords_dictionary = {
 		"incel",
 	]),
 	"J" : new Set ([
-		"juif",
 		"jouif",
 		"journalope",
+		"juif",
+		"juifs",
+		"juive",
+		"juives",
 		"jvarchive",
 	]),
 	"L" : new Set([
@@ -129,12 +132,14 @@ const new_banwords_dictionary = {
 	"C" : new Set([
 		"cannabis",
 		"cassos",
+		"charnier",
 		"chibre",
 		"cocaine",
 		"coke",
 		"con",
 		"conchie",
 		"connard",
+		"conne",
 		"couilles", /* mais pas "couille" */
 		"cretin",
 		"cul",
