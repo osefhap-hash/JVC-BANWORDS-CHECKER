@@ -123,6 +123,7 @@ const new_banwords_dictionary = {
 	"B" : new Set([
 		"baise",
 		"baisodrome",
+		"bander",
 		"batard",
 		"beuh",
 		"bite",
@@ -186,6 +187,8 @@ const new_banwords_dictionary = {
 	"P" : new Set([
 		"pedale",
 		"penis",
+		"petard",
+		"poignarder",
 		"pourriture",
 		"porno",
 		"prostituee",
@@ -208,6 +211,9 @@ const new_banwords_dictionary = {
 	]),
 	"T" : new Set([
 		"tapette",
+	]),
+	"Z" : new Set([
+		"zgeg",
 	]),
 } ;
 
