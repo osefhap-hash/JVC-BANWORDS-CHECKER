@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.8
+// @version      1.0.9
 // Created		 :	Saturday, 19th September 2026
-// Last modified :	Wednesday, 23rd September 2026
+// Last modified :	Sunday, 4th October 2026
 // @match        https://www.jeuxvideo.com/forums/*
 // @author       captain_cid31
 // @description  --- Script pour détecter les mots ou groupes de mots interdits ---
@@ -138,7 +138,7 @@ function check_message(/*src*/) {
 	if (!textarea) return ;
 	const message = textarea.value ; // plutôt que textContent
 	const tokenized_msg = tokenize_with_positions(message) ;
-	const detections = [] ;
+	const raw_detections = [] ;
 
 	for (const token of tokenized_msg) {
 		const canonical_token = canonical_form(token.text) ;
@@ -146,42 +146,61 @@ function check_message(/*src*/) {
 
 		// ?.has() évite d'avoir à tester si la lettre existe dans le dictionnaire.
     	if (all_banwords_dictionary[key_letter]?.has(canonical_token))
-			detections.push({
+			raw_detections.push({
 				text	: token.text,
 				start	: token.start,
 				end		: token.end,
+				is_url	: token.is_url, // On garde l'information si c'est dans une URL
 			}) ;
 	}
 
-	for (let i = 0 ; i < tokenized_msg.length ; i++) {
+	const len_tokens = tokenized_msg.length ;
+
+	for (let i = 0 ; i < len_tokens ; ++i) {
+		let canonical_phrase = canonical_form(tokenized_msg[i].text) ;
+
     	for (let length = 2 ; length <= max_phrase_length ; length++) {
-        	const phrase_tokens = tokenized_msg.slice(i, i + length) ;
+			const end_index = i + length ;
+            if (end_index > len_tokens) break ;
+			// Plus assez de tokens pour cette longueur, on arrête la boucle interne
 
-			if (phrase_tokens.length !== length) continue ; // Si pas assez de tokens pour constituer la phrase...
+			const last_token = tokenized_msg[end_index - 1] ;
+			// On construit la phrase progressivement au lieu de tout recalculer avec .slice() et .map()
+            canonical_phrase += " " + canonical_form(last_token.text) ;
+            const key_letter = canonical_phrase[0].toUpperCase() ;
 
-			const canonical_phrase = phrase_tokens.map(token => canonical_form(token.text)).join(" ") ;
-			const key_letter = canonical_phrase[0].toUpperCase() ;
+			if (banphrases_dictionary[key_letter]?.has(canonical_phrase)) {
+				const phrase_tokens = tokenized_msg.slice(i, end_index) ;
+				// Une phrase est considérée comme "URL" si l'un de ses tokens fait partie d'un lien
+                const is_phrase_url = phrase_tokens.some(t => t.is_url) ;
 
-        	if (banphrases_dictionary[key_letter]?.has(canonical_phrase))
-				detections.push({
-					text	: message.slice(phrase_tokens[0].start, phrase_tokens[phrase_tokens.length - 1].end),
-					start	: phrase_tokens[0].start,
-					end		: phrase_tokens[phrase_tokens.length - 1].end,
-				}) ;
+				const first_token = tokenized_msg[i] ;
+				raw_detections.push({
+                    text	: message.slice(first_token.start, last_token.end),
+                    start	: first_token.start,
+                    end		: last_token.end,
+					is_url	: is_phrase_url,
+                }) ;
+			}
     	}
 	}
 	// Tri des détections
-	detections.sort((a, b) => {
+	raw_detections.sort((a, b) => {
 		if (a.start !== b.start) return a.start - b.start ;
 		return (b.end - b.start) - (a.end - a.start) ;
 	}) ;
-	// Suppression des chevauchements
-	const filtered_detections = [] ;
-	for (const detection of detections) {
-		const previous = filtered_detections[filtered_detections.length - 1] ;
-		if (previous && detection.start < previous.end) continue ;
-		filtered_detections.push(detection) ;
-	}
-	// Affichage
-	show_check_preview(message, filtered_detections) ;
+	
+	// Suppression des chevauchements pour le surlignage (Highlight)
+    const detections_for_highlight = [] ;
+    for (const detection of raw_detections) {
+        const previous = detections_for_highlight[detections_for_highlight.length - 1] ;
+        if (previous && detection.start < previous.end) continue ;
+        detections_for_highlight.push(detection) ;
+    }
+
+    // Création de la liste pour les suggestions (on filtre pour exclure les URLs)
+    const detections_for_suggestion = detections_for_highlight.filter(d => !d.is_url) ;
+
+    // Affichage en passant les deux listes distinctes
+    show_check_preview(message, detections_for_highlight, detections_for_suggestion, tokenized_msg) ;
 }
