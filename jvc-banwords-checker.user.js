@@ -159,7 +159,7 @@ function check_message(/*src*/) {
 
 			if (phrase_tokens.length !== length) continue ; // Si pas assez de tokens pour constituer la phrase...
 
-			const canonical_phrase = phrase_tokens.map(token => canonical_form(token.text)).join(" ") ;			
+			const canonical_phrase = phrase_tokens.map(token => canonical_form(token.text)).join(" ") ;
 			const key_letter = canonical_phrase[0].toUpperCase() ;
 
         	if (banphrases_dictionary[key_letter]?.has(canonical_phrase))
