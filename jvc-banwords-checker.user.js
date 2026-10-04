@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.9
+// @version      1.0.10
 // Created		 :	Saturday, 19th September 2026
 // Last modified :	Sunday, 4th October 2026
 // @match        https://www.jeuxvideo.com/forums/*
@@ -141,17 +141,24 @@ function check_message(/*src*/) {
 	const raw_detections = [] ;
 
 	for (const token of tokenized_msg) {
-		const canonical_token = canonical_form(token.text) ;
-    	const key_letter = canonical_token[0].toUpperCase() ;
+		if (token.is_url) {
+        	// On analyse spécifiquement l'URL pour y trouver des banwords/banphrases
+        	const url_detections = check_in_url(token.text, token.start) ;
+        	raw_detections.push(...url_detections) ;
+    	}
+		else {
+			const canonical_token = canonical_form(token.text) ;
+    		const key_letter = canonical_token[0].toUpperCase() ;
 
-		// ?.has() évite d'avoir à tester si la lettre existe dans le dictionnaire.
-    	if (all_banwords_dictionary[key_letter]?.has(canonical_token))
-			raw_detections.push({
-				text	: token.text,
-				start	: token.start,
-				end		: token.end,
-				is_url	: token.is_url, // On garde l'information si c'est dans une URL
-			}) ;
+			// ?.has() évite d'avoir à tester si la lettre existe dans le dictionnaire.
+    		if (all_banwords_dictionary[key_letter]?.has(canonical_token))
+				raw_detections.push({
+					text	: token.text,
+					start	: token.start,
+					end		: token.end,
+					is_url	: false, // On garde l'information
+				}) ;
+		}
 	}
 
 	const len_tokens = tokenized_msg.length ;
