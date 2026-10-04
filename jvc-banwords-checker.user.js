@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.15
+// @version      1.0.16
 // Created		 :	Saturday, 19th September 2026
 // Last modified :	Monday, 5th October 2026
 // @match        https://www.jeuxvideo.com/forums/*
