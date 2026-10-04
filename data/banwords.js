@@ -148,6 +148,7 @@ const new_banwords_dictionary = {
 		"cum",
 	]),
 	"D" : new Set([
+		"degenere", /* dégénéré */
 		"demeure", /* à cause de demeuré, le bot assimile les mots accentués à leur version non accentuée */
 		"drogue",
 	]),
@@ -182,11 +183,15 @@ const new_banwords_dictionary = {
 		"milf",
 		"mongol",
 	]),
+	"N" : new Set([
+		"neuneu",
+	]),
 	"O" : new Set([
 		"onlyfans",
 	]),
 	"P" : new Set([
 		"pedale",
+		"pendre",
 		"penis",
 		"petard",
 		"poignarder",
