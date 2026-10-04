@@ -21,13 +21,7 @@ function tokenize_with_positions(str) {
     const escaped_smileys = sorted_smileys.map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) ;
 
     // 3. On construit la regex globale avec des groupes d'alternance sûrs
-    const regex_pattern = `
-        (https?:\\/\\/[^\\s]+|www\\.[^\\s]+)
-        |
-        (${escaped_smileys.join('|')})
-        |
-        ([\\p{L}\\p{N}€<>]+)
-    ` ;
+    const regex_pattern = `(https?:\\/\\/[^\\s]+|www\\.[^\\s]+)|(${escaped_smileys.join('|')})|([\\p{L}\\p{N}€<>]+)` ;
     const regex = new RegExp(regex_pattern, "giu") ;
 
     for (const match of str.matchAll(regex)) {
