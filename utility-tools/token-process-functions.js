@@ -45,9 +45,21 @@ function tokenize_with_positions(str) {
 
 function check_in_url(url_text, url_start_offset) {
     const url_detections = [] ;
-    const tokenized_url = tokenize_with_positions(url_text) ;
 
-    // Vérification des mots isolés dans l'URL
+    // Au lieu de réutiliser tokenize_with_positions (qui traite l'URL comme un bloc),
+    // on extrait directement tous les mots/tokens internes de l'URL :
+    const sub_regex = /[\p{L}\p{N}€<>]+/gu ;
+    const tokenized_url = [] ;
+
+    for (const match of url_text.matchAll(sub_regex)) {
+        tokenized_url.push({
+            text  : match[0],
+            start : match.index,
+            end   : match.index + match[0].length
+        }) ;
+    }
+
+    // 1. Vérification des mots isolés dans l'URL
     for (const token of tokenized_url) {
         const canonical_token = canonical_form(token.text) ;
         const key_letter = canonical_token[0]?.toUpperCase() ;
@@ -61,7 +73,8 @@ function check_in_url(url_text, url_start_offset) {
             }) ;
         }
     }
-    // Vérification des phrases dans l'URL (au cas où)
+
+    // 2. Vérification des phrases dans l'URL (au cas où)
     const len_tokens = tokenized_url.length ;
     for (let i = 0 ; i < len_tokens ; ++i) {
         let canonical_phrase = canonical_form(tokenized_url[i].text) ;
