@@ -41,3 +41,49 @@ function tokenize_with_positions(str) {
 	}
 	return tokens_list ;
 }
+
+
+function check_in_url(url_text, url_start_offset) {
+    const url_detections = [] ;
+    const tokenized_url = tokenize_with_positions(url_text) ;
+
+    // Vérification des mots isolés dans l'URL
+    for (const token of tokenized_url) {
+        const canonical_token = canonical_form(token.text) ;
+        const key_letter = canonical_token[0]?.toUpperCase() ;
+
+        if (key_letter && all_banwords_dictionary[key_letter]?.has(canonical_token)) {
+            url_detections.push({
+                text	: token.text,
+                start	: url_start_offset + token.start,
+                end		: url_start_offset + token.end,
+                is_url	: true // Indique clairement que c'est dans un lien
+            }) ;
+        }
+    }
+    // Vérification des phrases dans l'URL (au cas où)
+    const len_tokens = tokenized_url.length ;
+    for (let i = 0 ; i < len_tokens ; ++i) {
+        let canonical_phrase = canonical_form(tokenized_url[i].text) ;
+
+        for (let length = 2 ; length <= max_phrase_length ; ++length) {
+            const end_index = i + length ;
+            if (end_index > len_tokens) break ;
+
+            const last_token = tokenized_url[end_index - 1] ;
+            canonical_phrase += " " + canonical_form(last_token.text) ;
+            const key_letter = canonical_phrase[0].toUpperCase() ;
+
+            if (banphrases_dictionary[key_letter]?.has(canonical_phrase)) {
+                const first_token = tokenized_url[i] ;
+                url_detections.push({
+                    text	: url_text.slice(first_token.start, last_token.end),
+                    start	: url_start_offset + first_token.start,
+                    end		: url_start_offset + last_token.end,
+                    is_url	: true
+                }) ;
+            }
+        }
+    }
+    return url_detections ;
+}
