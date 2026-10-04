@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.13
+// @version      1.0.14
 // Created		 :	Saturday, 19th September 2026
 // Last modified :	Monday, 5th October 2026
 // @match        https://www.jeuxvideo.com/forums/*
@@ -146,6 +146,10 @@ function check_message(/*src*/) {
         	const url_detections = check_in_url(token.text, token.start) ;
         	raw_detections.push(...url_detections) ;
     	}
+		else if (token.is_smiley) {
+            // On ignore les smileys pour la détection
+            continue ;
+        }
 		else {
 			const canonical_token = canonical_form(token.text) ;
     		const key_letter = canonical_token[0].toUpperCase() ;
