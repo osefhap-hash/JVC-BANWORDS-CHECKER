@@ -92,6 +92,7 @@ const basic_banwords_dictionary = {
 	"S" : new Set([
 		"salop",
 		"salope",
+		"salopes",
 		"sardoche", /* suite à l'affaire Sardoche */
 		"schiapa",
 		"schiappa",
