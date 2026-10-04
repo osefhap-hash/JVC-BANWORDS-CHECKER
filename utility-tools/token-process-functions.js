@@ -12,34 +12,57 @@ function canonical_form(word) {
 
 
 function tokenize_with_positions(str) {
-	const tokens_list = [] ;
+    const tokens_list = [] ;
 
-	// Regex globale combinant les URLs et les tokens classiques (mots/nombres)
-    // On capture d'abord les URLs pour qu'elles soient traitées comme un seul bloc indivisible.
-    const regex  = /(https?:\/\/[^\s]+|www\.[^\s]+)|([\p{L}\p{N}€<>]+)/gu ;
-	//const regex  = /[\p{L}\p{N}€<>]+/gu ;
+    // 1. On transforme le Set en une regex globale de smileys (ex: /(:hap:|:noel:|\-?\)|...)/gi)
+    // On trie par ordre de longueur décroissante pour éviter qu'un smiley court ne prenne le pas sur un long
+	// (Par exemple, :-))) avant :-) ou :) )
+    const sorted_smileys = Array.from(jvc_smileys).sort((a, b) => b.length - a.length) ;
+    // On échappe les caractères spéciaux regex si nécessaire,
+	// mais pour les smileys JVC simples, une interpolation directe fonctionne :
+    const smileys_regex_str = sorted_smileys.map(s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|') ;
 
-	// Les caractères espace , . ! ? - / ' sont donc des exemples de séparateurs, des caractères qui vont découper la chaîne.
-	for (const match of str.matchAll(regex)) {
-		const url_match  = match[1] ;
-        const word_match = match[2] ;
+    // 2. Regex globale combinant : [URLs] | [Smileys] | [Mots/Nombres classiques]
+    const regex = new RegExp(`
+		(${/(https?:\/\/[^\s]+|www\.[^\s]+)/.source})
+		|
+		(${smileys_regex_str})
+		|
+		([\\p{L}\\p{N}€<>]+)`, "giu"
+	) ;
 
-		if (url_match)
-			tokens_list.push({
-                text	: url_match,
-                start	: match.index,
-                end		: match.index + url_match.length,
-                is_url	: true, // <-- On marque le token comme étant un lien
+    for (const match of str.matchAll(regex)) {
+        const url_match    = match[1] ;
+        const smiley_match = match[2] ;
+        const word_match   = match[3] ;
+
+        if (url_match) {
+            tokens_list.push({
+                text		: url_match,
+                start		: match.index,
+                end			: match.index + url_match.length,
+                is_url		: true,
+                is_smiley	: false,
             }) ;
-		else if (word_match)
-			tokens_list.push({
-				text	: word_match,
-				start	: match.index,
-				end		: match.index + word_match.length,
-				is_url	: false,
-			}) ;
-	}
-	return tokens_list ;
+        } else if (smiley_match) {
+            tokens_list.push({
+                text		: smiley_match,
+                start		: match.index,
+                end			: match.index + smiley_match.length,
+                is_url		: false,
+                is_smiley	: true, // <-- On peut marquer le token comme smiley
+            }) ;
+        } else if (word_match) {
+            tokens_list.push({
+                text		: word_match,
+                start		: match.index,
+                end			: match.index + word_match.length,
+                is_url		: false,
+                is_smiley	: false,
+            }) ;
+        }
+    }
+    return tokens_list ;
 }
 
 
