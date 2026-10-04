@@ -38,19 +38,40 @@ function build_modified_message(message, detections) {
 		modified_message += message.slice(current_position, detection.start) ; // Texte normal avant la détection
 		const forbidden_text = message.slice(detection.start, detection.end) ; // Texte de la détection
 
-		// Deuxième lettre du mot problématique détecté => en italique JVC
+		// Deuxième lettre du mot problématique détecté => Zero Width Joiner (ZWJ)
 		if (forbidden_text.length >= 2) {
 			modified_message += forbidden_text[0] ;
-			modified_message += "''" ;
-			modified_message += forbidden_text[1] ;
-			modified_message += "''" ;
-			modified_message += forbidden_text.slice(2) ;
+			modified_message += '\u200D' ;
+			modified_message += forbidden_text.slice(1) ;
 		}
 		else modified_message += forbidden_text ;
 		current_position = detection.end ;
 	}
 	modified_message += message.slice(current_position) ; // Texte restant
 	return modified_message ;
+}
+
+
+function build_paranoid_message(message, tokenized_msg) {
+    let paranoid_message = "" ;
+    let current_position = 0 ;
+
+    for (const token of tokenized_msg) {
+        // Texte normal avant le token
+        paranoid_message += message.slice(current_position, token.start) ;
+        const token_text = token.text ;
+
+        // Si c'est un lien ou un mot trop court (< 3 caractères), on le laisse intact
+        if (token.is_url || token_text.length < 3) paranoid_message += token_text ;
+        else { // Application du ZWJ sur TOUS les mots
+            let modified_word = token_text[0] + '\u200D' + token_text.slice(1) ;
+            paranoid_message += modified_word ;
+        }
+        current_position = token.end ;
+    }
+    // Texte restant après le dernier token
+    paranoid_message += message.slice(current_position) ;
+    return paranoid_message ;
 }
 
 
@@ -65,6 +86,13 @@ async function set_text_in_clipboard(current_window, text, copy_btn) {
 }
 
 
+// Petite fonction utilitaire pour formuler joliment le texte des liens
+function url_warning_text(urls) {
+    if (urls.length === 1) return `Un mot interdit a été détecté dans le lien : "${urls[0]}"` ;
+    return `Des mots interdits ont été détectés dans ${urls.length} liens.` ;
+}
+
+
 // La fonction suivante - qui crée la fenêtre de prévisualisation - utilise les styles définis dans le fichier "css/check-preview.css"
 // pour l'élaboration de la fenêtre de prévisualisation.
 // La feuille de style est invoquée dans le fichier de script principal (le fichier .user.js) via la métadonnée Userscript suivante :
@@ -72,7 +100,7 @@ async function set_text_in_clipboard(current_window, text, copy_btn) {
 // Le fichier javascript contenant cette fonction de création de fenêtre de prévisualisation est chargé via la métadonnée suivante :
 	// @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/utility-tools/preview-window-functions.js
 
-function show_check_preview(message, detections) {
+function show_check_preview(message, detections_for_highlight, detections_for_suggestion, tokenized_msg) {
 	const check_window = window.open(
 		"",
 		"shape_check",
@@ -81,10 +109,10 @@ function show_check_preview(message, detections) {
 	if (!check_window) return ;
 
 	const check_window_doc = check_window.document ;
-	const unique_detections = new Set(detections.map(detection => detection.text)) ;
+	const unique_detections = new Set(detections_for_highlight.map(detection => detection.text)) ;
 	let warning = "" ;
 
-	if (detections.length === 0) warning = "✓ Aucun élément interdit détecté." ;
+	if (detections_for_highlight.length === 0) warning = "✓ Aucun élément interdit détecté." ;
 	else {
 		const count = unique_detections.size ;
 		warning = `⚠ ${count} élément${count > 1 ? "s distincts" : ""} interdit${count > 1 ? "s" : ""} détecté${count > 1 ? "s" : ""}.` ;
@@ -115,16 +143,30 @@ function show_check_preview(message, detections) {
 
 	const analysis_message_container = check_window_doc.createElement("div") ;
 	analysis_message_container.classList.add("message") ;
-	analysis_message_container.innerHTML = build_highlighted_message(message, detections) ;
+	analysis_message_container.innerHTML = build_highlighted_message(message, detections_for_highlight) ;
 
 	analysis_column.appendChild(analysis_title) ;
 	analysis_column.appendChild(analysis_warning_container) ;
+	// --- NOUVEAU : Indication pour les liens compromis ---
+    const url_detections = detections_for_highlight.filter(d => d.is_url) ;
+    if (url_detections.length > 0) {
+        const url_warning_box = check_window_doc.createElement("div") ;
+        url_warning_box.style.marginTop	= "12px" ;
+        url_warning_box.style.fontSize	= "14px" ;
+        url_warning_box.style.color		= "#ffaa00" ; // Orange d'avertissement
+
+        const unique_urls = [...new Set(url_detections.map(d => d.text))] ;
+        url_warning_box.textContent = `${url_warning_text(unique_urls)} (laissés intacts pour ne pas casser les liens).` ;
+        
+        analysis_column.appendChild(url_warning_box) ;
+    }
+    // ----------------------------------------------------
 	analysis_column.appendChild(analysis_message_container) ;
 	boxes_container.appendChild(analysis_column) ;
 
 	// Zone "Visualisation de la modification du message"
 	// (seulement s'il y a des mots problématiques dans le message, sinon ça n'a pas de sens) :
-	if (detections.length > 0) {
+	if (detections_for_suggestion.length > 0) {
 		const suggestion_column = check_window_doc.createElement("div") ;
 		suggestion_column.classList.add("message-column") ;
 
@@ -133,12 +175,18 @@ function show_check_preview(message, detections) {
 
 		const modified_message_container = check_window_doc.createElement("div") ;
 		modified_message_container.classList.add("message") ;
-		const modified_message = build_modified_message(message, detections) ;
+		const modified_message = build_modified_message(message, detections_for_suggestion) ;
 		modified_message_container.textContent = modified_message ;
+
+		// Conteneur pour aligner les boutons côte à côte
+        const buttons_container = check_window_doc.createElement("div") ;
+        buttons_container.style.display = "flex" ;
+        buttons_container.style.gap = "10px" ;
+        buttons_container.style.marginBottom = "10px" ;
 
 		const copy_button = check_window_doc.createElement("button") ;
 		copy_button.classList.add("copy-button") ;
-		copy_button.textContent = "Copier" ;
+		copy_button.textContent = "Copier (contournement minimal)" ;
 		copy_button.type = "button" ;
 		copy_button.addEventListener("click", () => set_text_in_clipboard(
 			check_window,
@@ -146,8 +194,24 @@ function show_check_preview(message, detections) {
 			copy_button
 		)) ;
 
+		// Bouton de copie mode paranoïaque (à droite de l'autre)
+        const paranoid_message = build_paranoid_message(message, tokenized_msg) ;
+
+        const copy_paranoid_button = check_window_doc.createElement("button") ;
+        copy_paranoid_button.classList.add("copy-button") ;
+        copy_paranoid_button.textContent = "Copier (contournement \"paranoïaque\")" ;
+        copy_paranoid_button.type = "button" ;
+        copy_paranoid_button.addEventListener("click", () => set_text_in_clipboard(
+            check_window,
+            paranoid_message,
+            copy_paranoid_button
+        )) ;
+
+		buttons_container.appendChild(copy_button) ;
+		buttons_container.appendChild(copy_paranoid_button) ;
+
 		suggestion_column.appendChild(suggestion_title) ;
-		suggestion_column.appendChild(copy_button) ;
+		suggestion_column.appendChild(buttons_container) ;
 		suggestion_column.appendChild(modified_message_container) ;
 		boxes_container.appendChild(suggestion_column) ;
 	}
