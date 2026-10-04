@@ -52,6 +52,91 @@ function build_modified_message(message, detections) {
 }
 
 
+const jvc_smileys = new Set([
+	":)",
+	":snif:",
+	":gba:",
+	":g)",
+	":-)",
+	":snif2:",
+	":bravo:",
+	":d)",
+	":hap:",
+	":ouch:",
+	":pacg:",
+	":cd:",
+	":-)))",
+	":ouch2:",
+	":pacd:",
+	":cute:",
+	":content:",
+	":p)",
+	":-p",
+	":noel:",
+	":oui:",
+	":(",
+	":peur:",
+	":question:",
+	":cool:",
+	":-(",
+	":coeur:",
+	":mort:",
+	":rire:",
+	":-((",
+	":fou:",
+	":sleep:",
+	":-D",
+	":nonnon:",
+	":fier:",
+	":honte:",
+	":rire2:",
+	":non2:",
+	":sarcastic:",
+	":monoeil:",
+	":o))",
+	":nah:",
+	":doute:",
+	":rouge:",
+	":ok:",
+	":non:",
+	":malade:",
+	":fete:",
+	":sournois:",
+	":hum:",
+	":ange:",
+	":diable:",
+	":gni:",
+	":play:",
+	":desole:",
+	":spoiler:",
+	":merci:",
+	":svp:",
+	":sors:",
+	":salut:",
+	":rechercher:",
+	":hello:",
+	":up:",
+	":bye:",
+	":gne:",
+	":lol:",
+	":dpdr:",
+	":dehors:",
+	":hs:",
+	":banzai:",
+	":bave:",
+	":pf:",
+	":cimer:",
+	":ddb:",
+	":pave:",
+	":objection:",
+	":siffle:",
+	":opps:",
+	":hapoelparty:",
+	":fish:",
+	":loveyou:",
+]) ;
+
+
 function build_paranoid_message(message, tokenized_msg) {
     let paranoid_message = "" ;
     let current_position = 0 ;
@@ -62,7 +147,7 @@ function build_paranoid_message(message, tokenized_msg) {
         const token_text = token.text ;
 
         // Si c'est un lien ou un mot trop court (< 3 caractères), on le laisse intact
-        if (token.is_url || token_text.length < 3) paranoid_message += token_text ;
+        if (token.is_url || token.is_smiley || token_text.length < 3) paranoid_message += token_text ;
         else { // Application du ZWJ sur TOUS les mots
             let modified_word = token_text[0] + '\u200D' + token_text.slice(1) ;
             paranoid_message += modified_word ;
@@ -78,8 +163,9 @@ function build_paranoid_message(message, tokenized_msg) {
 async function set_text_in_clipboard(current_window, text, copy_btn) {
 	try {
 		await current_window.navigator.clipboard.writeText(text) ;
+		const old_textContent = copy_btn.textContent ;
 		copy_btn.textContent = "Copié !" ;
-		setTimeout(() => { copy_btn.textContent = "Copier" ; }, 1500) ;
+		setTimeout(() => { copy_btn.textContent = old_textContent ; }, 1500) ; // Restaurer l'ancien contenu textuel de chaque bouton
 	} catch (error) {
 		console.error("Impossible de copier le texte :", error) ;
 	}
