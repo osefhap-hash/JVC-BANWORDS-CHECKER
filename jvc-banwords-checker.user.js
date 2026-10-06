@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.16
+// @version      1.0.17
 // Created		 :	Saturday, 19th September 2026
-// Last modified :	Monday, 5th October 2026
+// Last modified :	Tuesday, 6th October 2026
 // @match        https://www.jeuxvideo.com/forums/*
 // @author       captain_cid31
 // @description  --- Script pour détecter les mots ou groupes de mots interdits ---
@@ -58,7 +58,7 @@ GM_addStyle(GM_getResourceText("check-btn-css")) ;
 
 function insert_check_button() {
 	// Insertion spéciale dans jvchat :
-	const text_area = document.querySelector("#message_reponse") ;
+	const text_area = document.querySelector("#message_reponse") ?? document.querySelector("#message_topic") ; // cas à part de la liste des sujets
 	// Attention ! Plusieurs textarea dans jvchat contrairement à jvc, donc document.querySelector("textarea") ne retournera pas toujours le bon !
 	if (text_area && text_area.placeholder === "Hop hop hop, le message ne va pas s'écrire tout seul !") {
 		const chck_btn = document.querySelector(".shape-check-btn") ;
@@ -70,7 +70,7 @@ function insert_check_button() {
 	}
 
 	// div qui contient la balise du bouton Poster.
-	const post_button_block = document.querySelector(".messageEditForm__buttons") ;
+	const post_button_block = document.querySelector(".messageEditForm__buttons") ?? document.querySelector(".messageEditor__buttons") ; // cas à part de la liste des sujets
 
 	// On ne tente l'insertion du bouton Vérifier que si le bouton Poster est chargé sur la page !
 	if (!post_button_block) return ;
@@ -134,7 +134,7 @@ for (const set_of_phrases of Object.values(banphrases_dictionary)) {
 function check_message(/*src*/) {
 	/*const clicked_btn = src.currentTarget ;*/
 	// Pas besoin de remonter jusqu'à la zone de saisie du texte depuis le button cliqué, on peut le cibler directement :
-	const textarea = document.querySelector("#message_reponse") ; // Rappel nécessaire à chaque clic, car le texte peut avoir changé entre temps.
+	const textarea = document.querySelector("#message_reponse") ?? document.querySelector("#message_topic") ; // Rappel nécessaire à chaque clic, car le texte peut avoir changé entre temps.
 	if (!textarea) return ;
 	const message = textarea.value ; // plutôt que textContent
 	const tokenized_msg = tokenize_with_positions(message) ;
@@ -200,7 +200,7 @@ function check_message(/*src*/) {
 		if (a.start !== b.start) return a.start - b.start ;
 		return (b.end - b.start) - (a.end - a.start) ;
 	}) ;
-	
+
 	// Suppression des chevauchements pour le surlignage (Highlight)
     const detections_for_highlight = [] ;
     for (const detection of raw_detections) {
