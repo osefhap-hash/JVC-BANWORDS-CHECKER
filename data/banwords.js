@@ -1,5 +1,6 @@
+// banwords.js
 /**
- * ================ DÉFINITION DES DICTIONNAIRES DES MOTS ET GROUPES DE MOTS INTERDITS ================
+ * ================ DÉFINITION DES DICTIONNAIRES DES MOTS INTERDITS ================
  */
 
 const basic_banwords_dictionary = {
