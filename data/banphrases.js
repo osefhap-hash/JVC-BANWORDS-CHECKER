@@ -1,3 +1,8 @@
+// banphrases.js
+/**
+ * ================ DÉFINITION DU DICTIONNAIRE DES GROUPES DE MOTS INTERDITS ================
+ */
+
 const banphrases_dictionary = {
 	"D" : new Set([
 		"drag queen",
