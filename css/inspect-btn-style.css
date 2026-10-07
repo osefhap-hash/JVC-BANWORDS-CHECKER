@@ -1,6 +1,7 @@
-/******** Feuille des styles s'appliquant au bouton "Vérifier" placé à côté du bouton "Poster" sur https://www.jeuxvideo.com ********/
+/* inspect-btn-style.css */
+/******** Feuille des styles s'appliquant au bouton "Inspecter" placé à côté du bouton "Poster" sur https://www.jeuxvideo.com ********/
 
-.shape-check-btn {
+.shape-inspect-btn {
 	all				 : unset			  ; /* On réinitialise les styles par défaut des boutons JVC */
 
 	height			 : 32px				  ; /* Dimensions pour le carré */
@@ -19,14 +20,14 @@
 	margin-left		 : 8px				  ;
 }
 
-.shape-check-btn:hover {
+.shape-inspect-btn:hover {
 	background-color : #ff0000 !important ;
 	color			 : #ffffff !important ;
 }
 
 /* Style spécial pour jvchat */
 
-.shape-check-btn-jvchat {
+.shape-inspect-btn-jvchat {
 	all				 : unset			  ;
 
     height           : 48px               ;
@@ -46,12 +47,12 @@
     flex-shrink      : 0                  ;
 }
 
-.shape-check-btn-jvchat:hover {
+.shape-inspect-btn-jvchat:hover {
 	background-color : #ff0000 !important ;
 	color			 : #ffffff !important ;
 }
 
-.messageEditForm__buttons:has(> .shape-check-btn-jvchat) { /* "parent direct de .shape-check-btn-jvchat" */
+.messageEditForm__buttons:has(> .shape-inspect-btn-jvchat) { /* "parent direct de .shape-inspect-btn-jvchat" */
     flex-direction   : column             ;
     align-items      : flex-start         ;
     height           : auto               ;
