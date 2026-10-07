@@ -1,3 +1,4 @@
+// token-process-functions.js
 /**
  * ================ FONCTIONS UTILITAIRES POUR LA MANIPULATION DES TOKENS ================
  */
@@ -59,7 +60,7 @@ function tokenize_with_positions(str) {
 }
 
 
-function check_in_url(url_text, url_start_offset) {
+function inspect_url(url_text, url_start_offset) {
     const url_detections = [] ;
 
     // Au lieu de réutiliser tokenize_with_positions (qui traite l'URL comme un bloc),
