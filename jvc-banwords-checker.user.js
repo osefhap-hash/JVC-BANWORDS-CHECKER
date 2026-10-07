@@ -1,20 +1,24 @@
 // ==UserScript==
+// jvc-banwords-checker.user.js
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
 // @version      1.0.17
 // Created		 :	Saturday, 19th September 2026
-// Last modified :	Tuesday, 6th October 2026
+// Last modified :	Wednesday, 7th October 2026
 // @match        https://www.jeuxvideo.com/forums/*
 // @author       captain_cid31
 // @description  --- Script pour détecter les mots ou groupes de mots interdits ---
 //
-// @resource     check-btn-css		https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/css/check-btn.css
-// @resource     check-preview-css	https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/css/check-preview.css
+// @resource     inspect-window-html	https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/html/inspection-window.html
+//
+// @resource     inspect-btn-style-css			https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/css/inspect-btn-style.css
+// @resource     inspection-window-style-css	https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/css/inspection-window-style.css
 //
 // @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/data/banwords.js
 // @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/data/banphrases.js
+// @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/data/elements-to-ignore.js
 // @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/utility-tools/token-process-functions.js
-// @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/utility-tools/preview-window-functions.js
+// @require      https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/utility-tools/inspect-window-functions.js
 //
 // @updateURL    https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banwords-checker.user.js
 // @downloadURL  https://raw.githubusercontent.com/osefhap-hash/JVC-BANWORDS-CHECKER/main/jvc-banwords-checker.user.js
@@ -37,16 +41,18 @@
 
 
 /**
- * ================ CHARGEMENT DU STYLE DU BOUTON VÉRIFIER ================
+ * ================ CHARGEMENT DU STYLE DU BOUTON INSPECTER ================
  */
 
 // Définition, chargement, puis injection du style dans la page :
-//const check_button_style = document.createElement("style") ;
-//check_button_style.textContent = GM_getResourceText("check-btn-css") ;
-//document.head.appendChild(check_button_style) ;
+//const inspect_button_style = document.createElement("style") ;
+//inspect_button_style.textContent = GM_getResourceText("inspect-btn-style-css") ;
+//document.head.appendChild(inspect_button_style) ;
 
 // Plus directement :
-GM_addStyle(GM_getResourceText("check-btn-css")) ;
+GM_addStyle(
+	GM_getResourceText("inspect-btn-style-css")
+) ;
 // GM_addStyle() injecte le CSS dans le document de la page où s'exécute le userscript. Dans notre cas, la page JVC.
 
 
@@ -56,15 +62,15 @@ GM_addStyle(GM_getResourceText("check-btn-css")) ;
  *	 Recherche du lieu d'insertion, application du style, et comportement au clic.
  */
 
-function insert_check_button() {
+function insert_inspect_button() {
 	// Insertion spéciale dans jvchat :
 	const text_area = document.querySelector("#message_reponse") ?? document.querySelector("#message_topic") ; // cas à part de la liste des sujets
 	// Attention ! Plusieurs textarea dans jvchat contrairement à jvc, donc document.querySelector("textarea") ne retournera pas toujours le bon !
 	if (text_area && text_area.placeholder === "Hop hop hop, le message ne va pas s'écrire tout seul !") {
-		const chck_btn = document.querySelector(".shape-check-btn") ;
-		if (chck_btn && chck_btn.classList.contains("shape-check-btn")) {
-			chck_btn.classList.remove("shape-check-btn") ;
-			chck_btn.classList.add("shape-check-btn-jvchat") ;
+		const inspect_btn = document.querySelector(".shape-inspect-btn") ;
+		if (inspect_btn && inspect_btn.classList.contains("shape-inspect-btn")) {
+			inspect_btn.classList.remove("shape-inspect-btn") ;
+			inspect_btn.classList.add("shape-inspect-btn-jvchat") ;
 		}
 		return ;
 	}
@@ -72,27 +78,27 @@ function insert_check_button() {
 	// div qui contient la balise du bouton Poster.
 	const post_button_block = document.querySelector(".messageEditForm__buttons") ?? document.querySelector(".messageEditor__buttons") ; // cas à part de la liste des sujets
 
-	// On ne tente l'insertion du bouton Vérifier que si le bouton Poster est chargé sur la page !
+	// On ne tente l'insertion du bouton Inspecter que si le bouton Poster est chargé sur la page !
 	if (!post_button_block) return ;
 
-	// On n'insère que si le bouton Vérifier n'est pas déjà inséré...
+	// On n'insère que si le bouton Inspecter n'est pas déjà inséré...
 	// (important pour le MutationObserver plus bas, pour qu'il n'insère pas en boucle le button à chaque changement dans la page)
-	if (post_button_block.querySelector(".shape-check-btn")) return ;
+	if (post_button_block.querySelector(".shape-inspect-btn")) return ;
 
-	// Si on a passé les tests précédents, le bouton Vérifier est prêt à être créé et inséré.
-	const check_button = document.createElement("button") ;
-	check_button.title			= "Vérifier la présence de mots interdits" ;
-	check_button.classList.add("shape-check-btn") ;
-	check_button.textContent	= "Vérifier" ;
-	check_button.type			= "button" ;
+	// Si on a passé les tests précédents, le bouton Inspecter est prêt à être créé et inséré.
+	const inspect_button = document.createElement("button") ;
+	inspect_button.title			= "Vérifier la présence de mots interdits" ;
+	inspect_button.classList.add("shape-inspect-btn") ;
+	inspect_button.textContent	= "Inspecter" ;
+	inspect_button.type			= "button" ;
 
-	post_button_block.appendChild(check_button) ;
-	check_button.addEventListener("click", check_message) ;
+	post_button_block.appendChild(inspect_button) ;
+	inspect_button.addEventListener("click", inspect_message) ;
 }
 /**
  * ================ APPEL DE LA FONCTION D'INSERTION DU BOUTON (1ÈRE TENTATIVE) ================
  */
-insert_check_button() ;
+insert_inspect_button() ;
 
 
 
@@ -101,9 +107,9 @@ insert_check_button() ;
  *								(À CAUSE DE LA DOM PAS CHARGÉE IMMÉDIATEMENT)
  */
 
-// Constructeur : créé un MutationObserver qui va faire la même action à chaque changement dans la page -> insertCheckButton()
+// Constructeur : créé un MutationObserver qui va faire la même action à chaque changement dans la page -> insert_inspect_button()
 const mut_obs = new MutationObserver((mutations) => {
-	insert_check_button() ;
+	insert_inspect_button() ;
 }) ;
 
 // Mais lors de quels changements exactement ?
@@ -128,10 +134,10 @@ for (const set_of_phrases of Object.values(banphrases_dictionary)) {
 
 /**
  * ================ FONCTION DE DÉTECTION DES MOTS ET GROUPES DE MOTS INTERDITS ================
- *			Fonction définissant le comportement du bouton "Vérifier" au clic de celui-ci.
+ *			Fonction définissant le comportement du bouton "Inspecter" au clic de celui-ci.
  */
 
-function check_message(/*src*/) {
+function inspect_message(/*src*/) {
 	/*const clicked_btn = src.currentTarget ;*/
 	// Pas besoin de remonter jusqu'à la zone de saisie du texte depuis le button cliqué, on peut le cibler directement :
 	const textarea = document.querySelector("#message_reponse") ?? document.querySelector("#message_topic") ; // Rappel nécessaire à chaque clic, car le texte peut avoir changé entre temps.
@@ -143,7 +149,7 @@ function check_message(/*src*/) {
 	for (const token of tokenized_msg) {
 		if (token.is_url) {
         	// On analyse spécifiquement l'URL pour y trouver des banwords/banphrases
-        	const url_detections = check_in_url(token.text, token.start) ;
+        	const url_detections = inspect_url(token.text, token.start) ;
         	raw_detections.push(...url_detections) ;
     	}
 		else if (token.is_smiley) {
@@ -213,5 +219,5 @@ function check_message(/*src*/) {
     const detections_for_suggestion = detections_for_highlight.filter(d => !d.is_url) ;
 
     // Affichage en passant les deux listes distinctes
-    show_check_preview(message, detections_for_highlight, detections_for_suggestion, tokenized_msg) ;
+    create_inspection_window(message, detections_for_highlight, detections_for_suggestion, tokenized_msg) ;
 }
