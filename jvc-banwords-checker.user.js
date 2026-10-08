@@ -2,9 +2,9 @@
 // jvc-banwords-checker.user.js
 // @name         JVC BANWORDS CHECKER
 // @namespace    https://github.com/osefhap-hash/JVC-BANWORDS-CHECKER
-// @version      1.0.18
+// @version      1.0.19
 // Created		 :	Saturday, 19th September 2026
-// Last modified :	Wednesday, 7th October 2026
+// Last modified :	Thursday, 8th October 2026
 // @match        https://www.jeuxvideo.com/forums/*
 // @author       captain_cid31
 // @description  --- Script pour détecter les mots ou groupes de mots interdits ---
