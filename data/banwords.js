@@ -126,6 +126,7 @@ const new_banwords_dictionary = {
 		"baise",
 		"baisodrome",
 		"bander",
+		"bangala",
 		"batard",
 		"beuh",
 		"bite",
@@ -158,15 +159,18 @@ const new_banwords_dictionary = {
 		"emmerdeur", /* mais pas emmerde, ni emmerder */
 		"encule",
 		"enculer",
+		"escort",
 		"escorte",
 	]),
 	"F" : new Set([
 		"fellation",
 		"femboy",
+		"fusiller",
 	]),
 	"G" : new Set([
 		"garce",
 		"gay", /* au singulier */
+		"gitan",
 		"gouine",
 		"grognasse",
 	]),
@@ -175,6 +179,7 @@ const new_banwords_dictionary = {
 	]),
 	"I" : new Set([
 		"imbecile",
+		"inceste",
 	]),
 	"L" : new Set([
 		"levrette",
