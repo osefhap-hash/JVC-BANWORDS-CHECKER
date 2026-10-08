@@ -143,6 +143,7 @@ const new_banwords_dictionary = {
 		"con",
 		"conchie",
 		"connard",
+		"connasse",
 		"conne",
 		"couilles", /* mais pas "couille" */
 		"cretin",
