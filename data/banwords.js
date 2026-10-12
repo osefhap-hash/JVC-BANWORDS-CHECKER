@@ -40,6 +40,7 @@ const basic_banwords_dictionary = {
 		"feminazi",
 		"feuj",
 		"fiotte",
+		"fusillade",
 	]),
 	"G" : new Set([
 		"genderfluid",
@@ -97,6 +98,7 @@ const basic_banwords_dictionary = {
 		"sardoche", /* suite à l'affaire Sardoche */
 		"schiapa",
 		"schiappa",
+		"seringue",
 		"shoah",
 		"sjw",
 		"stalk", /* mais stalker, stalkeur et stalkeuse passent */
