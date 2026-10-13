@@ -40,7 +40,6 @@ const basic_banwords_dictionary = {
 		"feminazi",
 		"feuj",
 		"fiotte",
-		"fusillade",
 	]),
 	"G" : new Set([
 		"genderfluid",
@@ -98,7 +97,6 @@ const basic_banwords_dictionary = {
 		"sardoche", /* suite à l'affaire Sardoche */
 		"schiapa",
 		"schiappa",
-		"seringue",
 		"shoah",
 		"sjw",
 		"stalk", /* mais stalker, stalkeur et stalkeuse passent */
@@ -154,6 +152,7 @@ const new_banwords_dictionary = {
 	]),
 	"D" : new Set([
 		"degenere", /* dégénéré */
+		"delawarde",
 		"demeure", /* à cause de demeuré, le bot assimile les mots accentués à leur version non accentuée */
 		"drogue",
 	]),
@@ -168,6 +167,7 @@ const new_banwords_dictionary = {
 	"F" : new Set([
 		"fellation",
 		"femboy",
+		"fusillade",
 		"fusiller",
 	]),
 	"G" : new Set([
