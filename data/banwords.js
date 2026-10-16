@@ -125,12 +125,15 @@ const new_banwords_dictionary = {
 	"B" : new Set([
 		"baise",
 		"baisodrome",
+		"bande",
 		"bander",
+		"bandes",
 		"bangala",
 		"batard",
 		"beuh",
 		"bite",
 		"bouffon",
+		"bukakke",
 		"buter",
 	]),
 	"C" : new Set([
@@ -163,8 +166,10 @@ const new_banwords_dictionary = {
 		"enculer",
 		"escort",
 		"escorte",
+		"etron", /* au singulier */
 	]),
 	"F" : new Set([
+		"fdp",
 		"fellation",
 		"femboy",
 		"fusillade",
@@ -189,6 +194,7 @@ const new_banwords_dictionary = {
 	]),
 	"M" : new Set([
 		"marijuana",
+		"melina",
 		"milf",
 		"mongol",
 	]),
@@ -226,6 +232,7 @@ const new_banwords_dictionary = {
 	]),
 	"T" : new Set([
 		"tapette",
+		"trainee",
 	]),
 	"Z" : new Set([
 		"zgeg",
