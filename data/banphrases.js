@@ -9,6 +9,7 @@ const banphrases_dictionary = {
 	]),
 	"G" : new Set([
 		"grand remplacement",
+		"gros porc",
 	]),
 	"J" : new Set([
 		"jeunesse et valeurs",
