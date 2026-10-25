@@ -187,6 +187,7 @@ const new_banwords_dictionary = {
 	]),
 	"I" : new Set([
 		"imbecile",
+		"imbeciles",
 		"inceste",
 	]),
 	"L" : new Set([
