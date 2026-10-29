@@ -143,6 +143,7 @@ const new_banwords_dictionary = {
 		"chibre",
 		"cocaine",
 		"coke",
+		"collabo",
 		"con",
 		"conchie",
 		"connard",
@@ -172,7 +173,8 @@ const new_banwords_dictionary = {
 	"F" : new Set([
 		"fdp",
 		"fellation",
-		"femboy",
+		"femboy", /* au singulier uniquement ? */
+		"fion",
 		"fusillade",
 		"fusiller",
 	]),
@@ -186,6 +188,7 @@ const new_banwords_dictionary = {
 	]),
 	"H" : new Set([
 		"harem",
+		"homosexuel",
 	]),
 	"I" : new Set([
 		"imbecile",
@@ -239,6 +242,8 @@ const new_banwords_dictionary = {
 	]),
 	"Z" : new Set([
 		"zgeg",
+		"zigounette",
+		"zob",
 	]),
 } ;
 
