@@ -160,6 +160,7 @@ const new_banwords_dictionary = {
 		"drogue",
 	]),
 	"E" : new Set([
+		"ejac",
 		"ejaculer",
 		"emmerdeur", /* mais pas emmerde, ni emmerder */
 		"encule",
@@ -179,6 +180,7 @@ const new_banwords_dictionary = {
 		"garce",
 		"gay", /* au singulier */
 		"gitan",
+		"gode",
 		"gouine",
 		"grognasse",
 	]),
