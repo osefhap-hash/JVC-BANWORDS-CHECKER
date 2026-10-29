@@ -22,6 +22,7 @@ const banphrases_dictionary = {
 	]),
 	"M" : new Set([
 		"marc ladreit de lacharriere",
+		"mein kampf",
 	]),
 	"T" : new Set([
 		"ta gueule", /* mais pas gueule tout seul, ni gueuler */
