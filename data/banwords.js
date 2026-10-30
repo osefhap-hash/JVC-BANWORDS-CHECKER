@@ -188,6 +188,7 @@ const new_banwords_dictionary = {
 	]),
 	"H" : new Set([
 		"harem",
+		"homo",
 		"homosexuel",
 	]),
 	"I" : new Set([
